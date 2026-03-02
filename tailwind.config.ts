@@ -39,6 +39,35 @@ const config: Config = {
         sans: ["Inter", "system-ui", "sans-serif"],
         arabic: ["Noto Sans Arabic", "Tahoma", "Arial", "sans-serif"],
       },
+      animation: {
+        "pulse-glow": "pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "fade-in-up": "fade-in-up 0.4s ease-out forwards",
+        "progress": "progress 0.5s ease-out",
+        "pulse-slow": "pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "float": "float 3s ease-in-out infinite",
+        "shimmer": "shimmer 2s linear infinite",
+      },
+      keyframes: {
+        "pulse-glow": {
+          "0%, 100%": { boxShadow: "0 0 15px -3px rgba(229, 173, 66, 0.4)" },
+          "50%": { boxShadow: "0 0 25px -3px rgba(229, 173, 66, 0.7)" },
+        },
+        "fade-in-up": {
+          "0%": { opacity: "0", transform: "translateY(10px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "progress": {
+          "0%": { width: "0%" },
+        },
+        "float": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-5px)" },
+        },
+        "shimmer": {
+          "from": { backgroundPosition: "200% 0" },
+          "to": { backgroundPosition: "-200% 0" },
+        }
+      },
     },
   },
   plugins: [],

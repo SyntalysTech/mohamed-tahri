@@ -115,323 +115,348 @@ export default function Dashboard() {
   const selectedSession = sessions.find((s) => s.id === selected);
 
   return (
-    <div className="min-h-screen bg-mrt-50">
-      {/* ── Header ── */}
-      <header className="bg-mrt-950 text-white px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2 sm:gap-4 min-w-0">
-          <Link href="/" className="p-1.5 sm:p-2 hover:bg-white/10 rounded-lg transition-colors shrink-0">
-            <ArrowLeft size={18} />
-          </Link>
-          <Image
-            src="/logo.png"
-            alt="MRT"
-            width={44}
-            height={35}
-            className="invert drop-shadow-[0_0_1px_rgba(255,255,255,0.8)] hidden sm:block"
-          />
-          <div className="min-w-0">
-            <h1 className="text-sm sm:text-lg font-semibold truncate">Panel de Control</h1>
-            <p className="text-[10px] sm:text-xs text-mrt-400 truncate">
-              Asesoria MRT
-            </p>
-          </div>
-        </div>
-        <div className="flex items-center gap-1 sm:gap-3 shrink-0">
-          <a
-            href="https://www.asesoriamrt.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-1.5 sm:p-2 hover:bg-white/10 rounded-lg transition-colors text-mrt-400 hover:text-white"
-            title="asesoriamrt.com"
-          >
-            <ExternalLink size={14} />
-          </a>
-          <button onClick={load} className="p-1.5 sm:p-2 hover:bg-white/10 rounded-lg transition-colors" title="Actualizar">
-            <RefreshCw size={14} className="sm:w-4 sm:h-4" />
-          </button>
-          <button
-            onClick={handleClearAll}
-            className="p-1.5 sm:p-2 hover:bg-red-500/20 text-red-300 rounded-lg transition-colors"
-          >
-            <Trash2 size={14} />
-          </button>
-        </div>
-      </header>
-
-      {/* ── Premium Revenue Strip ── */}
-      {premiumSessions.length > 0 && (
-        <div className="px-3 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-mrt-950/5 to-gold-100/50 border-b border-gold-200">
-          <div className="grid grid-cols-3 sm:flex sm:items-center gap-3 sm:gap-6">
-            {/* Ingresos */}
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg bg-gold-100 flex items-center justify-center shrink-0">
-                <DollarSign size={14} className="text-gold-600" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-[9px] sm:text-[10px] text-mrt-500 font-medium">Ingresos</p>
-                <p className="text-base sm:text-xl font-bold text-mrt-900">{totalRevenue}€</p>
-              </div>
-            </div>
-            {/* Conversion */}
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg bg-emerald-100 flex items-center justify-center shrink-0">
-                <TrendingUp size={14} className="text-emerald-600" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-[9px] sm:text-[10px] text-mrt-500 font-medium">Conversion</p>
-                <p className="text-base sm:text-xl font-bold text-mrt-900">{conversionRate}%</p>
-              </div>
-            </div>
-            {/* Upsell */}
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg bg-purple-100 flex items-center justify-center shrink-0">
-                <Zap size={14} className="text-purple-600" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-[9px] sm:text-[10px] text-mrt-500 font-medium">Upsell</p>
-                <p className="text-base sm:text-xl font-bold text-mrt-900">{upsellRate}%</p>
-              </div>
-            </div>
-            {/* Tier breakdown - hidden on very small, shown on sm+ */}
-            <div className="col-span-3 sm:col-span-1 flex items-center gap-2 pt-1 sm:pt-0 border-t sm:border-t-0 sm:border-l border-mrt-200 sm:pl-6">
-              <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-lg bg-blue-100 flex items-center justify-center shrink-0">
-                <BarChart3 size={14} className="text-blue-600" />
-              </div>
-              <div className="min-w-0">
-                <p className="text-[9px] sm:text-[10px] text-mrt-500 font-medium">Por nivel</p>
-                <div className="flex items-center gap-1.5 sm:gap-2 text-[10px] sm:text-[11px] text-mrt-700">
-                  <span className="bg-mrt-100 px-1.5 py-0.5 rounded">19€: {tierBreakdown.pre_eval}</span>
-                  <span className="bg-mrt-100 px-1.5 py-0.5 rounded">79€: {tierBreakdown.file_opening}</span>
-                  <span className="bg-emerald-50 text-emerald-700 px-1.5 py-0.5 rounded font-medium">399€: {tierBreakdown.full_processing}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ── Stats Grid ── */}
-      <div className="px-3 sm:px-6 py-3 sm:py-4 grid grid-cols-3 sm:grid-cols-3 md:grid-cols-6 gap-2 sm:gap-3">
-        {([
-          { key: "all", label: "Total", icon: Users, color: "text-mrt-600" },
-          { key: "in_progress", label: "En curso", icon: Clock, color: "text-blue-600" },
-          { key: "eligible", label: "Elegibles", icon: CheckCircle2, color: "text-emerald-600" },
-          { key: "not_eligible", label: "No elegible", icon: AlertTriangle, color: "text-red-600" },
-          { key: "referred", label: "Derivados", icon: Scale, color: "text-amber-600" },
-          { key: "completed", label: "Completados", icon: CheckCircle2, color: "text-emerald-600" },
-        ] as const).map(({ key, label, icon: Icon, color }) => (
-          <button
-            key={key}
-            onClick={() => setFilter(key)}
-            className={`bg-white rounded-xl border-2 p-2 sm:p-3 text-left transition-all hover:shadow-md ${
-              filter === key ? "border-mrt-900 shadow-md" : "border-transparent"
-            }`}
-          >
-            <div className="flex items-center gap-1 sm:gap-2 mb-0.5 sm:mb-1">
-              <Icon size={12} className={`sm:w-3.5 sm:h-3.5 ${color}`} />
-              <span className="text-[10px] sm:text-xs text-mrt-500 truncate">{label}</span>
-            </div>
-            <span className="text-lg sm:text-2xl font-bold text-mrt-900">{counts[key]}</span>
-          </button>
-        ))}
+    <div className="min-h-screen bg-mrt-950 text-mrt-100 overflow-hidden relative">
+      {/* Background elements */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none opacity-40">
+        <div className="absolute top-0 right-1/4 w-[500px] h-[500px] bg-gradient-to-b from-mrt-800/50 to-transparent rounded-full blur-[120px]"></div>
+        <div className="absolute bottom-0 left-1/4 w-[600px] h-[600px] bg-gradient-to-t from-gold-900/10 to-transparent rounded-full blur-[150px]"></div>
       </div>
 
-      {/* ── Content: List + Detail ── */}
-      <div className="px-3 sm:px-6 pb-4 sm:pb-6 flex gap-4">
-        {/* Session list */}
-        <div className={`w-full ${selected ? "hidden md:block md:w-1/2" : ""} transition-all`}>
-          <div className="flex items-center gap-2 mb-2 sm:mb-3">
-            <Filter size={14} className="text-mrt-400" />
-            <span className="text-xs sm:text-sm text-mrt-500">
-              {filtered.length} expediente{filtered.length !== 1 ? "s" : ""}
-            </span>
-          </div>
-
-          {filtered.length === 0 ? (
-            <div className="bg-white rounded-xl border border-mrt-100 p-8 sm:p-12 text-center">
-              <Users size={32} className="mx-auto text-mrt-200 mb-3 sm:w-10 sm:h-10" />
-              <p className="text-mrt-500 text-sm">No hay expedientes</p>
-              <p className="text-mrt-400 text-[11px] sm:text-xs mt-1">
-                Apareceran cuando los clientes usen el chatbot
+      <div className="relative z-10 h-screen flex flex-col">
+        {/* ── Header ── */}
+        <header className="bg-mrt-950/80 backdrop-blur-md text-white px-4 sm:px-6 py-4 flex items-center justify-between gap-4 border-b border-mrt-800 shrink-0">
+          <div className="flex items-center gap-4 min-w-0">
+            <Link href="/" className="p-2 sm:p-2.5 bg-mrt-800 hover:bg-mrt-700 hover:shadow-[0_0_10px_rgba(255,255,255,0.1)] rounded-xl transition-all shrink-0 border border-mrt-700">
+              <ArrowLeft size={18} />
+            </Link>
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-mrt-800 to-mrt-900 border border-mrt-700 flex items-center justify-center shrink-0 hidden sm:flex shadow-inner">
+              <Image
+                src="/logo.png"
+                alt="MRT"
+                width={24}
+                height={20}
+                className="invert opacity-90"
+              />
+            </div>
+            <div className="min-w-0">
+              <h1 className="text-base sm:text-xl font-bold truncate bg-clip-text text-transparent bg-gradient-to-r from-white to-mrt-300 tracking-tight">Panel de Control</h1>
+              <p className="text-[10px] sm:text-xs text-mrt-400 truncate uppercase tracking-widest font-semibold">
+                Asesoria MRT
               </p>
             </div>
-          ) : (
-            <div className="space-y-2">
-              {filtered.map((s) => {
-                const st = statusStyles[s.status];
-                return (
-                  <div
-                    key={s.id}
-                    onClick={() => setSelected(s.id)}
-                    className={`bg-white rounded-xl border-2 p-3 sm:p-4 cursor-pointer transition-all hover:shadow-md ${
-                      selected === s.id ? "border-mrt-900 shadow-md" : "border-transparent hover:border-mrt-200"
-                    }`}
-                  >
-                    {/* Row 1: Name + status */}
-                    <div className="flex items-center justify-between gap-2 mb-1.5">
-                      <div className="flex items-center gap-1.5 min-w-0">
-                        <span className="font-semibold text-sm text-mrt-900 truncate">
-                          {s.name || "Sin nombre"}
-                        </span>
-                        {s.plan === "premium" && <Crown size={12} className="text-gold-500 shrink-0" />}
-                      </div>
-                      <div className="flex items-center gap-1.5 shrink-0">
-                        <span className={`inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-medium ${st.bg} ${st.text}`}>
-                          <st.icon size={10} />
-                          <span className="hidden sm:inline">{statusLabels[s.status]}</span>
-                        </span>
-                        <ChevronRight size={14} className="text-mrt-300 sm:hidden" />
-                      </div>
-                    </div>
-                    {/* Row 2: Meta info */}
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2 text-[11px] text-mrt-400 min-w-0 overflow-hidden">
-                        <span>{new Date(s.createdAt).toLocaleDateString()}</span>
-                        {s.phone && (
-                          <span className="hidden sm:flex items-center gap-1"><Phone size={10} />{s.phone}</span>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-1.5 shrink-0">
-                        {(s.amountPaid || 0) > 0 && (
-                          <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-full">
-                            {s.amountPaid}€
-                          </span>
-                        )}
-                        <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${
-                          s.paymentStatus === "paid" ? "bg-emerald-50 text-emerald-700" : "bg-mrt-100 text-mrt-500"
-                        }`}>
-                          {s.paymentStatus === "paid" ? "Pagado" : "Pend."}
-                        </span>
-                        <button
-                          onClick={(e) => { e.stopPropagation(); handleDelete(s.id); }}
-                          className="p-1 hover:bg-red-50 text-mrt-300 hover:text-red-500 rounded-lg transition-colors"
-                        >
-                          <Trash2 size={13} />
-                        </button>
-                      </div>
+          </div>
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+            <a
+              href="https://www.asesoriamrt.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 sm:p-2.5 bg-mrt-900 hover:bg-mrt-800 border border-mrt-800 rounded-xl transition-all text-mrt-400 hover:text-white"
+            >
+              <ExternalLink size={16} />
+            </a>
+            <button onClick={load} className="p-2 sm:p-2.5 bg-mrt-900 hover:bg-mrt-800 border border-mrt-800 rounded-xl transition-all text-mrt-400 hover:text-white group">
+              <RefreshCw size={16} className="group-hover:rotate-180 transition-transform duration-500" />
+            </button>
+            <button
+              onClick={handleClearAll}
+              className="p-2 sm:p-2.5 bg-red-950/30 hover:bg-red-900/50 border border-red-900/30 text-red-400 hover:text-red-300 hover:shadow-[0_0_10px_rgba(239,68,68,0.2)] rounded-xl transition-all"
+            >
+              <Trash2 size={16} />
+            </button>
+          </div>
+        </header>
+
+        {/* ── Premium Revenue Strip ── */}
+        <div className="flex-1 overflow-y-auto w-full">
+          {premiumSessions.length > 0 && (
+            <div className="px-4 sm:px-6 py-4 bg-gradient-to-r from-gold-900/20 via-mrt-900/50 to-mrt-900/30 border-b border-gold-900/30 backdrop-blur-md relative overflow-hidden">
+              <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-gold-500/5 to-transparent pointer-events-none"></div>
+              <div className="grid grid-cols-3 sm:flex sm:items-center gap-4 sm:gap-8 relative z-10 max-w-7xl mx-auto">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gold-500/10 border border-gold-500/20 flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(229,173,66,0.15)]">
+                    <DollarSign size={20} className="text-gold-400" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-[10px] sm:text-[11px] text-gold-400/70 font-bold uppercase tracking-wider">Ingresos</p>
+                    <p className="text-lg sm:text-2xl font-black text-white tracking-tight">{totalRevenue}€</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(16,185,129,0.15)]">
+                    <TrendingUp size={20} className="text-emerald-400" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-[10px] sm:text-[11px] text-emerald-400/70 font-bold uppercase tracking-wider">Conversion</p>
+                    <p className="text-lg sm:text-2xl font-black text-white tracking-tight">{conversionRate}%</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(168,85,247,0.15)]">
+                    <Zap size={20} className="text-purple-400" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-[10px] sm:text-[11px] text-purple-400/70 font-bold uppercase tracking-wider">Upsell</p>
+                    <p className="text-lg sm:text-2xl font-black text-white tracking-tight">{upsellRate}%</p>
+                  </div>
+                </div>
+                <div className="col-span-3 sm:col-span-1 flex items-center gap-3 pt-3 sm:pt-0 border-t sm:border-t-0 sm:border-l border-mrt-800 sm:pl-8">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(59,130,246,0.15)]">
+                    <BarChart3 size={20} className="text-blue-400" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-[10px] sm:text-[11px] text-blue-400/70 font-bold uppercase tracking-wider mb-1">Por nivel</p>
+                    <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-mrt-300 font-medium">
+                      <span className="bg-mrt-800 border border-mrt-700 px-2 py-0.5 rounded-md">19€: <span className="text-white">{tierBreakdown.pre_eval}</span></span>
+                      <span className="bg-mrt-800 border border-mrt-700 px-2 py-0.5 rounded-md">79€: <span className="text-white">{tierBreakdown.file_opening}</span></span>
+                      <span className="bg-emerald-950 border border-emerald-800 text-emerald-400 px-2 py-0.5 rounded-md">399€: <span className="text-white">{tierBreakdown.full_processing}</span></span>
                     </div>
                   </div>
-                );
-              })}
+                </div>
+              </div>
             </div>
           )}
+
+          {/* ── Stats Grid ── */}
+          <div className="px-4 sm:px-6 py-4 sm:py-6 grid grid-cols-3 sm:grid-cols-3 md:grid-cols-6 gap-3 sm:gap-4 max-w-7xl mx-auto">
+            {([
+              { key: "all", label: "TOTAL", icon: Users, color: "text-mrt-400", border: "border-mrt-800", bg: "bg-mrt-900" },
+              { key: "in_progress", label: "EN CURSO", icon: Clock, color: "text-blue-400", border: "border-blue-900/50", bg: "bg-blue-950/20" },
+              { key: "eligible", label: "ELEGIBLES", icon: CheckCircle2, color: "text-emerald-400", border: "border-emerald-900/50", bg: "bg-emerald-950/20" },
+              { key: "not_eligible", label: "NO ELEGIBLE", icon: AlertTriangle, color: "text-red-400", border: "border-red-900/50", bg: "bg-red-950/20" },
+              { key: "referred", label: "DERIVADOS", icon: Scale, color: "text-amber-400", border: "border-amber-900/50", bg: "bg-amber-950/20" },
+              { key: "completed", label: "COMPLETADOS", icon: CheckCircle2, color: "text-emerald-400", border: "border-emerald-900/50", bg: "bg-emerald-950/20" },
+            ] as const).map(({ key, label, icon: Icon, color, border, bg }) => (
+              <button
+                key={key}
+                onClick={() => setFilter(key)}
+                className={`rounded-2xl border-2 p-3 sm:p-4 text-left transition-all duration-300 relative overflow-hidden group ${filter === key ? `border-mrt-500 shadow-[0_0_20px_rgba(255,255,255,0.05)] ${bg}` : `${border} bg-mrt-900/40 hover:bg-mrt-800/80`
+                  }`}
+              >
+                {filter === key && <div className="absolute inset-x-0 bottom-0 h-0.5 bg-mrt-500"></div>}
+                <div className="flex items-center gap-1.5 sm:gap-2 mb-2">
+                  <Icon size={14} className={`sm:w-4 sm:h-4 ${color}`} />
+                  <span className={`text-[9px] sm:text-[10px] font-bold tracking-wider truncate ${color}`}>{label}</span>
+                </div>
+                <span className="text-xl sm:text-3xl font-black text-white">{counts[key]}</span>
+              </button>
+            ))}
+          </div>
+
+          {/* ── Content: List + Detail ── */}
+          <div className="px-4 sm:px-6 pb-6 sm:pb-8 flex gap-4 max-w-7xl mx-auto h-[calc(100vh-280px)]">
+            {/* Session list */}
+            <div className={`w-full overflow-y-auto pr-2 custom-scrollbar ${selected ? "hidden md:block md:w-1/2" : ""} transition-all`}>
+              <div className="flex items-center gap-2 mb-3 sm:mb-4 px-1">
+                <Filter size={14} className="text-mrt-500" />
+                <span className="text-xs sm:text-sm font-semibold text-mrt-400 tracking-wide">
+                  {filtered.length} EXPEDIENTE{filtered.length !== 1 ? "S" : ""}
+                </span>
+              </div>
+
+              {filtered.length === 0 ? (
+                <div className="bg-mrt-900/40 rounded-2xl border border-mrt-800/60 p-10 sm:p-16 text-center shadow-inner">
+                  <div className="w-16 h-16 mx-auto bg-mrt-800/80 rounded-full flex items-center justify-center mb-4 border border-mrt-700/50">
+                    <Users size={24} className="text-mrt-400" />
+                  </div>
+                  <p className="text-white font-semibold text-lg">No hay expedientes</p>
+                  <p className="text-mrt-500 text-xs mt-2 max-w-xs mx-auto">
+                    Los expedientes aparecerán aquí en tiempo real cuando los clientes interactúen con el chatbot.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {filtered.map((s) => {
+                    const st = statusStyles[s.status];
+                    // Replace light bg strings provided by previous config with premium dark mode ones
+                    let statusBg, statusText;
+                    if (s.status === "eligible" || s.status === "completed") { statusBg = "bg-emerald-950/40 border border-emerald-900/50"; statusText = "text-emerald-400"; }
+                    else if (s.status === "not_eligible") { statusBg = "bg-red-950/40 border border-red-900/50"; statusText = "text-red-400"; }
+                    else if (s.status === "referred") { statusBg = "bg-amber-950/40 border border-amber-900/50"; statusText = "text-amber-400"; }
+                    else { statusBg = "bg-blue-950/40 border border-blue-900/50"; statusText = "text-blue-400"; }
+
+                    return (
+                      <div
+                        key={s.id}
+                        onClick={() => setSelected(s.id)}
+                        className={`bg-mrt-900/60 backdrop-blur-sm rounded-2xl border-2 p-4 cursor-pointer transition-all duration-300 ${selected === s.id ? "border-mrt-500 shadow-[0_0_20px_rgba(255,255,255,0.05)] bg-mrt-800/80" : "border-mrt-800/50 hover:border-mrt-600 hover:bg-mrt-800/40"
+                          }`}
+                      >
+                        {/* Row 1: Name + status */}
+                        <div className="flex items-center justify-between gap-3 mb-2.5">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <span className={`font-bold text-base truncate ${selected === s.id ? "text-white" : "text-mrt-100"}`}>
+                              {s.name || "Cliente Sin Nombre"}
+                            </span>
+                            {s.plan === "premium" && <div className="bg-gold-500/10 p-1 rounded-md border border-gold-500/20"><Crown size={12} className="text-gold-400 shrink-0" /></div>}
+                          </div>
+                          <div className="flex items-center gap-2 shrink-0">
+                            <span className={`inline-flex items-center gap-1.5 text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-lg font-bold ${statusBg} ${statusText}`}>
+                              <st.icon size={12} />
+                              <span className="hidden sm:inline">{statusLabels[s.status]}</span>
+                            </span>
+                            <ChevronRight size={16} className={`sm:hidden ${selected === s.id ? "text-white" : "text-mrt-500"}`} />
+                          </div>
+                        </div>
+                        {/* Row 2: Meta info */}
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-3 text-xs text-mrt-400 min-w-0 overflow-hidden font-medium">
+                            <span className="flex items-center gap-1"><Clock size={12} className="text-mrt-500" /> {new Date(s.createdAt).toLocaleDateString()}</span>
+                            {s.phone && (
+                              <span className="hidden sm:flex items-center gap-1"><Phone size={12} className="text-mrt-500" />{s.phone}</span>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-2 shrink-0">
+                            {(s.amountPaid || 0) > 0 && (
+                              <span className="text-[11px] font-black text-emerald-400 bg-emerald-950/40 border border-emerald-900/50 px-2 py-0.5 rounded-md">
+                                +{s.amountPaid}€
+                              </span>
+                            )}
+                            <span className={`text-[10px] uppercase tracking-widest font-bold px-2 py-1 rounded-md border ${s.paymentStatus === "paid" ? "bg-emerald-950/40 text-emerald-400 border-emerald-900/50" : "bg-mrt-800/50 text-mrt-400 border-mrt-700/50"
+                              }`}>
+                              {s.paymentStatus === "paid" ? "Pagado" : "Pendiente"}
+                            </span>
+                            <button
+                              onClick={(e) => { e.stopPropagation(); handleDelete(s.id); }}
+                              className="p-1.5 bg-mrt-800/80 hover:bg-red-950/50 text-mrt-400 hover:text-red-400 border border-mrt-700 hover:border-red-900/50 rounded-lg transition-all"
+                            >
+                              <Trash2 size={14} />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* ── Detail panel ── */}
+            {selectedSession && (
+              <div className={`
+                fixed inset-0 z-50 bg-mrt-950/95 backdrop-blur-xl overflow-y-auto
+                md:static md:inset-auto md:z-auto md:w-1/2 md:rounded-2xl md:border md:border-mrt-800/60 md:bg-mrt-900/40 md:shadow-inner md:flex md:flex-col
+              `}>
+                {/* Detail header */}
+                <div className="sticky top-0 bg-mrt-900/80 backdrop-blur-md z-10 flex items-center justify-between px-5 py-4 sm:px-6 sm:py-5 border-b border-mrt-800">
+                  <h2 className="font-bold text-lg sm:text-xl text-white flex items-center gap-3">
+                    <button onClick={() => setSelected(null)} className="md:hidden p-2 bg-mrt-800 hover:bg-mrt-700 rounded-xl text-white mr-1 border border-mrt-700">
+                      <ArrowLeft size={18} />
+                    </button>
+                    Detalle del Expediente
+                    {selectedSession.plan === "premium" && <div className="bg-gold-500/10 p-1.5 rounded-lg border border-gold-500/20"><Crown size={16} className="text-gold-400" /></div>}
+                  </h2>
+                  <button onClick={() => setSelected(null)} className="hidden md:flex p-2 bg-mrt-800 hover:bg-mrt-700 border border-mrt-700 rounded-xl text-mrt-300 hover:text-white transition-colors items-center justify-center">
+                    <X size={18} />
+                  </button>
+                </div>
+
+                <div className="p-5 sm:p-6 overflow-y-auto custom-scrollbar md:flex-1">
+                  {/* Info grid */}
+                  <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-6">
+                    {[
+                      { icon: User, label: "Nombre Completo", value: selectedSession?.name || "—" },
+                      { icon: Phone, label: "Teléfono", value: selectedSession?.phone || "—" },
+                      { icon: Scale, label: "Vía Legal", value: selectedSession?.pathway ? pathwayLabelsES[selectedSession.pathway] : "—" },
+                      { icon: CreditCard, label: "Estado del Pago", value: selectedSession?.paymentStatus === "paid" ? `Completado ${selectedSession.amountPaid ? `(${selectedSession.amountPaid}€)` : ""}` : "Pendiente" },
+                    ].map((item, idx) => (
+                      <div key={item.label} className="bg-mrt-800/50 rounded-xl p-4 border border-mrt-700/50 shadow-inner">
+                        <div className="flex items-center gap-2 text-[10px] sm:text-xs font-bold uppercase tracking-wider text-mrt-400 mb-1.5">
+                          <item.icon size={14} className={idx === 3 && selectedSession?.paymentStatus === "paid" ? "text-emerald-400" : "text-mrt-500"} />{item.label}
+                        </div>
+                        <p className={`text-sm sm:text-base font-semibold truncate ${idx === 3 && selectedSession?.paymentStatus === "paid" ? "text-emerald-400" : "text-white"}`}>{item.value}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Premium info */}
+                  {selectedSession?.plan === "premium" && (
+                    <div className="mb-6 p-5 bg-gradient-to-br from-gold-900/20 to-mrt-800/20 rounded-xl border border-gold-900/50 shadow-inner relative overflow-hidden">
+                      <div className="absolute -right-10 -top-10 w-32 h-32 bg-gold-500/10 rounded-full blur-2xl"></div>
+                      <h3 className="text-xs font-bold uppercase tracking-widest text-gold-400 mb-4 flex items-center gap-2">
+                        <Crown size={14} /> Información Premium
+                      </h3>
+                      <div className="grid grid-cols-2 gap-4 relative z-10">
+                        <div className="bg-mrt-900/50 p-3 rounded-lg border border-mrt-800/50">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-mrt-400 block mb-1">Cierre Automático Nivel:</span>
+                          <p className="font-bold text-sm text-gold-300">
+                            {selectedSession.serviceTier ? tierLabelsES[selectedSession.serviceTier] : "—"}
+                          </p>
+                        </div>
+                        <div className="bg-mrt-900/50 p-3 rounded-lg border border-mrt-800/50">
+                          <span className="text-[10px] font-bold uppercase tracking-wider text-mrt-400 block mb-1">Estado Upsell (Recuperación):</span>
+                          <p className={`font-bold text-sm ${selectedSession.answers?.upsell === "accepted" ? "text-emerald-400" : selectedSession.answers?.upsell === "declined" ? "text-red-400" : "text-mrt-300"}`}>
+                            {selectedSession.answers?.upsell === "accepted" ? "Cerrado" : selectedSession.answers?.upsell === "declined" ? "Declinado" : "—"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Answers */}
+                  {Object.keys(selectedSession?.answers || {}).length > 0 && (
+                    <div className="mb-6">
+                      <h3 className="text-xs font-bold uppercase tracking-widest text-mrt-400 mb-3 ml-1">Respuestas Estructuradas</h3>
+                      <div className="bg-mrt-800/30 border border-mrt-700/50 rounded-xl overflow-hidden shadow-inner">
+                        {Object.entries(selectedSession!.answers).map(([key, val], idx) => (
+                          <div key={key} className={`flex items-center justify-between text-xs px-4 py-3 ${idx !== 0 ? "border-t border-mrt-700/30" : ""} hover:bg-mrt-800/50 transition-colors`}>
+                            <span className="text-mrt-400 font-mono text-[11px] truncate mr-4">{key}</span>
+                            <span className="text-white font-medium text-right bg-mrt-900/50 px-2 py-1 rounded-md border border-mrt-700/50">{val}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Documents */}
+                  {(selectedSession?.documents?.length ?? 0) > 0 && (
+                    <div className="mb-6">
+                      <h3 className="text-xs font-bold uppercase tracking-widest text-mrt-400 mb-3 ml-1">Documentos Automatizados</h3>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        {selectedSession!.documents.map((doc, i) => (
+                          <div key={i} className="flex items-center gap-3 text-xs bg-emerald-950/20 border border-emerald-900/30 text-emerald-300 rounded-xl px-4 py-3 hover:bg-emerald-950/40 transition-colors group cursor-pointer">
+                            <div className="bg-emerald-900/50 p-1.5 rounded-lg group-hover:bg-emerald-800/50 transition-colors">
+                              <FileText size={14} className="shrink-0 text-emerald-400" />
+                            </div>
+                            <span className="truncate font-medium">{doc}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Chat logs */}
+                  <div>
+                    <h3 className="text-xs font-bold uppercase tracking-widest text-mrt-400 mb-3 ml-1 flex items-center gap-2">
+                      <RefreshCw size={12} /> Log de Conversación
+                    </h3>
+                    <div className="space-y-3 bg-mrt-950 p-4 rounded-xl border border-mrt-800 shadow-inner">
+                      {selectedSession?.messages?.map((msg) => (
+                        <div key={msg.id} className={`flex flex-col ${msg.sender === "bot" ? "items-start" : "items-end"}`}>
+                          <div className={`text-xs rounded-2xl px-4 py-2.5 max-w-[85%] ${msg.sender === "bot" ? "bg-mrt-800 text-mrt-200 rounded-tl-sm border border-mrt-700" : "bg-gradient-to-br from-mrt-700 to-mrt-800 border border-mrt-600 text-white rounded-tr-sm shadow-md"
+                            }`}>
+                            <div className="whitespace-pre-wrap break-words leading-relaxed">{msg.text}</div>
+                          </div>
+                          <span className="text-[9px] font-mono text-mrt-600 mt-1.5 px-1">
+                            {new Date(msg.timestamp).toLocaleTimeString()}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* ── Detail panel ── */}
-        {selectedSession && (
-          <div className={`
-            fixed inset-0 z-50 bg-white overflow-y-auto
-            md:static md:inset-auto md:z-auto md:w-1/2 md:rounded-xl md:border md:border-mrt-100 md:max-h-[calc(100vh-220px)] md:overflow-y-auto md:sticky md:top-4
-          `}>
-            {/* Detail header */}
-            <div className="sticky top-0 bg-white z-10 flex items-center justify-between px-4 py-3 sm:px-5 sm:py-4 border-b border-mrt-100 md:border-b-0">
-              <h2 className="font-semibold text-base sm:text-lg text-mrt-900 flex items-center gap-2">
-                <button onClick={() => setSelected(null)} className="md:hidden p-1 hover:bg-mrt-100 rounded-lg text-mrt-400 mr-1">
-                  <ArrowLeft size={18} />
-                </button>
-                Detalle
-                {selectedSession.plan === "premium" && <Crown size={16} className="text-gold-500" />}
-              </h2>
-              <button onClick={() => setSelected(null)} className="hidden md:block p-1.5 hover:bg-mrt-100 rounded-lg text-mrt-400">
-                <X size={16} />
-              </button>
-            </div>
-
-            <div className="px-4 pb-6 sm:px-5">
-              {/* Info grid */}
-              <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-4 sm:mb-5">
-                {[
-                  { icon: User, label: "Nombre", value: selectedSession.name || "—" },
-                  { icon: Phone, label: "Telefono", value: selectedSession.phone || "—" },
-                  { icon: Scale, label: "Via legal", value: selectedSession.pathway ? pathwayLabelsES[selectedSession.pathway] : "—" },
-                  { icon: CreditCard, label: "Pago", value: selectedSession.paymentStatus === "paid" ? `Pagado ${selectedSession.amountPaid ? `(${selectedSession.amountPaid}€)` : ""}` : "Pendiente" },
-                ].map((item) => (
-                  <div key={item.label} className="bg-mrt-50 rounded-lg p-2.5 sm:p-3">
-                    <div className="flex items-center gap-1.5 text-[10px] sm:text-xs text-mrt-500 mb-0.5 sm:mb-1">
-                      <item.icon size={11} />{item.label}
-                    </div>
-                    <p className="text-xs sm:text-sm font-medium text-mrt-900 truncate">{item.value}</p>
-                  </div>
-                ))}
-              </div>
-
-              {/* Premium info */}
-              {selectedSession.plan === "premium" && (
-                <div className="mb-4 sm:mb-5 p-2.5 sm:p-3 bg-gradient-to-r from-gold-50 to-mrt-50 rounded-lg border border-gold-200">
-                  <h3 className="text-[11px] sm:text-xs font-semibold text-gold-600 mb-1.5 sm:mb-2 flex items-center gap-1">
-                    <Crown size={11} />Info Premium
-                  </h3>
-                  <div className="grid grid-cols-2 gap-2 text-[11px] sm:text-xs">
-                    <div>
-                      <span className="text-mrt-500">Nivel:</span>
-                      <p className="font-medium text-mrt-900">
-                        {selectedSession.serviceTier ? tierLabelsES[selectedSession.serviceTier] : "—"}
-                      </p>
-                    </div>
-                    <div>
-                      <span className="text-mrt-500">Upsell:</span>
-                      <p className="font-medium text-mrt-900">
-                        {selectedSession.answers.upsell === "accepted" ? "Aceptado" : selectedSession.answers.upsell === "declined" ? "Rechazado" : "—"}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Answers */}
-              {Object.keys(selectedSession.answers).length > 0 && (
-                <div className="mb-4 sm:mb-5">
-                  <h3 className="text-xs sm:text-sm font-semibold text-mrt-700 mb-2">Respuestas</h3>
-                  <div className="space-y-1.5">
-                    {Object.entries(selectedSession.answers).map(([key, val]) => (
-                      <div key={key} className="flex items-center justify-between text-[11px] sm:text-xs bg-mrt-50 rounded-lg px-2.5 sm:px-3 py-2">
-                        <span className="text-mrt-500 font-mono truncate mr-2">{key}</span>
-                        <span className="text-mrt-800 font-medium text-right shrink-0">{val}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Documents */}
-              {selectedSession.documents.length > 0 && (
-                <div className="mb-4 sm:mb-5">
-                  <h3 className="text-xs sm:text-sm font-semibold text-mrt-700 mb-2">Documentos</h3>
-                  <div className="space-y-1.5">
-                    {selectedSession.documents.map((doc, i) => (
-                      <div key={i} className="flex items-center gap-2 text-[11px] sm:text-xs bg-emerald-50 text-emerald-700 rounded-lg px-2.5 sm:px-3 py-2">
-                        <FileText size={12} className="shrink-0" /><span className="truncate">{doc}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Chat */}
-              <div>
-                <h3 className="text-xs sm:text-sm font-semibold text-mrt-700 mb-2">Chat</h3>
-                <div className="space-y-2 max-h-60 sm:max-h-80 overflow-y-auto">
-                  {selectedSession.messages.map((msg) => (
-                    <div key={msg.id} className={`text-[11px] sm:text-xs rounded-lg px-2.5 sm:px-3 py-2 ${
-                      msg.sender === "bot" ? "bg-mrt-50 text-mrt-700" : "bg-mrt-950 text-white ml-4 sm:ml-6"
-                    }`}>
-                      <div className="whitespace-pre-wrap break-words">{msg.text}</div>
-                      <div className="text-[9px] mt-1 text-mrt-400">
-                        {new Date(msg.timestamp).toLocaleString()}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* ── Footer ── */}
-      <div className="px-3 sm:px-6 py-2.5 sm:py-3 bg-mrt-950 text-mrt-500 text-[10px] flex flex-col sm:flex-row items-center justify-between gap-1">
-        <span>Asesoria MRT — asesoriamrt.com</span>
-        <span>+34 747 498 536 — El Vendrell, Tarragona</span>
+        {/* ── Footer ── */}
+        <div className="px-4 sm:px-6 py-4 bg-mrt-950 text-mrt-600 text-[10px] sm:text-xs flex flex-col sm:flex-row items-center justify-between gap-2 border-t border-mrt-800 font-medium tracking-wide shrink-0">
+          <span>ASESORIA MRT CRM V2.0 PROTOTYPE</span>
+          <span className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            SYSTEM ONLINE
+          </span>
+        </div>
       </div>
     </div>
   );
