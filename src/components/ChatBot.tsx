@@ -410,7 +410,7 @@ export default function ChatBot({ plan }: ChatBotProps) {
                   onKeyDown={handleKeyDown}
                   disabled={isTyping}
                   placeholder={currentStep.inputType === "date" ? "DD/MM/YYYY" : "..."}
-                  className={`flex-1 py-3.5 px-5 text-[13px] sm:text-sm rounded-xl border-2 focus:outline-none transition-all disabled:opacity-40 shadow-inner ${isPremium
+                  className={`flex-1 py-3.5 px-5 text-[16px] sm:text-[15px] rounded-xl border-2 focus:outline-none transition-all disabled:opacity-40 shadow-inner ${isPremium
                     ? "border-mrt-200 focus:border-gold-400 focus:ring-4 focus:ring-gold-400/10 bg-mrt-50/50"
                     : "border-mrt-200 focus:border-mrt-900 focus:ring-4 focus:ring-mrt-900/10 bg-mrt-50/50"
                     } ${currentStep.inputType === "date" ? "font-mono tracking-wider" : ""}`}

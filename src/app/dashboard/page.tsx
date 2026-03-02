@@ -167,11 +167,11 @@ export default function Dashboard() {
         </header>
 
         {/* ── Premium Revenue Strip ── */}
-        <div className="flex-1 overflow-y-auto w-full">
+        <div className="flex-1 min-h-0 flex flex-col w-full overflow-hidden">
           {premiumSessions.length > 0 && (
-            <div className="px-4 sm:px-6 py-4 bg-gradient-to-r from-gold-900/20 via-mrt-900/50 to-mrt-900/30 border-b border-gold-900/30 backdrop-blur-md relative overflow-hidden">
+            <div className="px-4 sm:px-6 py-4 bg-gradient-to-r from-gold-900/20 via-mrt-900/50 to-mrt-900/30 border-b border-gold-900/30 backdrop-blur-md relative overflow-hidden shrink-0">
               <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-gold-500/5 to-transparent pointer-events-none"></div>
-              <div className="grid grid-cols-3 sm:flex sm:items-center gap-4 sm:gap-8 relative z-10 max-w-7xl mx-auto">
+              <div className="grid grid-cols-2 lg:flex lg:items-center gap-4 sm:gap-8 relative z-10 max-w-7xl mx-auto">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gold-500/10 border border-gold-500/20 flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(229,173,66,0.15)]">
                     <DollarSign size={20} className="text-gold-400" />
@@ -243,7 +243,7 @@ export default function Dashboard() {
           </div>
 
           {/* ── Content: List + Detail ── */}
-          <div className="px-4 sm:px-6 pb-6 sm:pb-8 flex gap-4 max-w-7xl mx-auto h-[calc(100vh-280px)]">
+          <div className="px-4 sm:px-6 pb-6 sm:pb-8 flex flex-col md:flex-row gap-4 max-w-7xl mx-auto flex-1 min-h-0 w-full overflow-hidden">
             {/* Session list */}
             <div className={`w-full overflow-y-auto pr-2 custom-scrollbar ${selected ? "hidden md:block md:w-1/2" : ""} transition-all`}>
               <div className="flex items-center gap-2 mb-3 sm:mb-4 px-1">
