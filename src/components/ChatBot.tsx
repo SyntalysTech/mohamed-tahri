@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Language, Message, ClientSession, Plan } from "@/lib/types";
-import { getStep } from "@/lib/flow";
+import { getStep, startStep } from "@/lib/flow";
 import {
   createNewSession,
   saveSession,
@@ -66,19 +66,21 @@ function fillTemplate(text: string, session: ClientSession): string {
 }
 
 // ── Progress tracking ──────────────────────────────────────
-const stepsOrder = [
-  "language_select", "welcome", "topic_choice", "general_topic", "asylum_check",
-  "tq_in_spain", "tq_five_months", "tq_criminal", "tq_entry_ban", "tq_no_return", "tq_docs", "tq_eligible",
-  "ts_presence", "ts_proof", "ts_five_months", "ts_entry_date", "ts_criminal", "ts_entry_ban",
-  "ts_additional", "ts_work_docs", "ts_family_docs", "ts_vuln_docs", "ts_common_docs", "ts_eligible",
-  "service_tier", "premium_payment", "premium_upsell", "case_summary", "recovery_info",
-  "payment", "complete",
-];
-
 function getProgress(stepId: string): number {
-  const idx = stepsOrder.indexOf(stepId);
-  if (idx === -1) return 100;
-  return Math.min(100, Math.round((idx / (stepsOrder.length - 1)) * 100));
+  if (stepId === "welcome" || stepId === "language" || stepId === "disclaimer") return 10;
+  if (stepId === "name") return 20;
+  if (stepId === "topic_choice") return 30;
+
+  if (stepId.startsWith("arr_")) return 60;
+  if (stepId.startsWith("ren_")) return 60;
+  if (stepId.startsWith("rea_")) return 60;
+  if (stepId.startsWith("nac_")) return 60;
+
+  if (stepId === "eligible_checkout" || stepId === "refer_human") return 80;
+  if (stepId === "service_tier" || stepId === "payment" || stepId === "upsell") return 90;
+  if (stepId === "not_eligible_date" || stepId === "not_eligible_not_in_spain" || stepId === "end") return 100;
+
+  return 50;
 }
 
 // ── Component ──────────────────────────────────────────────
@@ -111,7 +113,7 @@ export default function ChatBot({ plan }: ChatBotProps) {
 
   const startNewSession = useCallback(() => {
     const newSession = createNewSession(plan);
-    const step = getStep("language_select");
+    const step = getStep(startStep);
     if (step) {
       const msg: Message = {
         id: crypto.randomUUID(),

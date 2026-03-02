@@ -41,7 +41,7 @@ export type ClientStatus =
   | "referred"
   | "completed";
 
-export type Pathway = "quinta" | "sexta" | null;
+export type Pathway = "quinta" | "sexta" | "renovacion" | "reagrupacion" | "nacionalidad" | "estudios" | "modificacion" | "recurso" | "otros" | null;
 
 export interface ClientSession {
   id: string;

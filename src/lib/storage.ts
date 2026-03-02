@@ -1,4 +1,5 @@
 import { ClientSession, Plan } from "./types";
+import { startStep } from "./flow";
 
 const SESSIONS_KEY = "regularizacion_sessions";
 const ACTIVE_KEY = "regularizacion_active";
@@ -63,7 +64,7 @@ export function createNewSession(plan: Plan = "professional"): ClientSession {
     name: "",
     phone: "",
     pathway: null,
-    currentStep: "language_select",
+    currentStep: startStep,
     answers: {},
     documents: [],
     status: "in_progress",
