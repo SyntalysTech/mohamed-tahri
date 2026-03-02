@@ -73,10 +73,10 @@ export const flowSteps: Record<string, FlowStep> = {
   asylum_check: {
     id: "asylum_check",
     message: t(
-      "واش قدمتي طلب لجوء (حماية دولية) قبل 31 دجنبر 2025؟",
-      "هل قدمت طلب حماية دولية (لجوء) قبل 31 ديسمبر 2025؟",
-      "واش قدمت طلب لجوء (حماية دولية) قبل 31 ديسمبر 2025؟",
-      "Avez-vous déposé une demande de protection internationale (asile) avant le 31 décembre 2025 ?"
+      "واش قدمتي طلب لجوء (حماية دولية) قبل 1 يناير 2026؟",
+      "هل قدمت طلب حماية دولية (لجوء) قبل 1 يناير 2026؟",
+      "واش قدمت طلب لجوء (حماية دولية) قبل 1 جانفي 2026؟",
+      "Avez-vous déposé une demande de protection internationale (asile) avant le 1er janvier 2026 ?"
     ),
     inputType: "buttons",
     options: [
@@ -111,7 +111,29 @@ export const flowSteps: Record<string, FlowStep> = {
       if (value === "no") {
         return { nextStep: "not_eligible_not_in_spain", updates: { status: "not_eligible" as const, answers: { ...session.answers, in_spain: "no" } } };
       }
-      return { nextStep: "tq_criminal", updates: { answers: { ...session.answers, in_spain: "yes" } } };
+      return { nextStep: "tq_five_months", updates: { answers: { ...session.answers, in_spain: "yes" } } };
+    },
+  },
+
+  tq_five_months: {
+    id: "tq_five_months",
+    message: t(
+      "واش بقيتي فإسبانيا بشكل متواصل 5 شهور على الأقل قبل ما تدفع الطلب؟",
+      "هل أقمت في إسبانيا بشكل مستمر لمدة 5 أشهر على الأقل قبل تقديم الطلب؟",
+      "واش بقيت في اسبانيا بشكل متواصل 5 أشهر على الأقل قبل ما تدفع؟",
+      "Avez-vous résidé en Espagne de manière continue pendant au moins 5 mois avant la demande ?"
+    ),
+    inputType: "buttons",
+    options: [
+      { label: t("نعم ✅", "نعم ✅", "نعم ✅", "Oui ✅"), value: "yes" },
+      { label: t("لا ❌", "لا ❌", "لا ❌", "Non ❌"), value: "no" },
+      { label: t("ما نعرفش ❓", "لا أعرف ❓", "ما نعرفش ❓", "Je ne sais pas ❓"), value: "unknown" },
+    ],
+    process: (value, session) => {
+      if (value === "no") {
+        return { nextStep: "not_eligible_yet", updates: { answers: { ...session.answers, five_months: "no" } } };
+      }
+      return { nextStep: "tq_criminal", updates: { answers: { ...session.answers, five_months: value } } };
     },
   },
 
@@ -184,10 +206,10 @@ export const flowSteps: Record<string, FlowStep> = {
   tq_docs: {
     id: "tq_docs",
     message: t(
-      "مزيان! 📎 دابا خاصك تصيفط لينا هاد الوثائق:\n\n1️⃣ نسخة من طلب اللجوء\n2️⃣ جواز السفر كامل (PDF)\n3️⃣ شهادة السوابق من بلادك\n\nصيفط الملفات واحد واحد:",
-      "ممتاز! 📎 الآن أرسل لنا الوثائق التالية:\n\n1️⃣ نسخة من طلب الحماية الدولية\n2️⃣ جواز السفر كامل (PDF)\n3️⃣ شهادة السوابق من بلدك\n\nأرسل الملفات واحداً تلو الآخر:",
-      "مليح! 📎 دابا لازم تبعثلنا هاد الوثائق:\n\n1️⃣ نسخة من طلب اللجوء\n2️⃣ جواز السفر كامل (PDF)\n3️⃣ شهادة السوابق من بلادك\n\nابعث الملفات وحدة وحدة:",
-      "Parfait ! 📎 Envoyez-nous maintenant les documents suivants :\n\n1️⃣ Copie de la demande d'asile\n2️⃣ Passeport complet (PDF)\n3️⃣ Casier judiciaire de votre pays\n\nEnvoyez les fichiers un par un :"
+      "مزيان! 📎 دابا خاصك تصيفط لينا هاد الوثائق:\n\n1️⃣ نسخة من طلب اللجوء\n2️⃣ جواز السفر كامل (PDF)\n3️⃣ شهادة السوابق من بلادك\n4️⃣ دليل الإقامة 5 شهور فإسبانيا\n\nصيفط الملفات واحد واحد:",
+      "ممتاز! 📎 الآن أرسل لنا الوثائق التالية:\n\n1️⃣ نسخة من طلب الحماية الدولية\n2️⃣ جواز السفر كامل (PDF)\n3️⃣ شهادة السوابق من بلدك\n4️⃣ دليل الإقامة لمدة 5 أشهر في إسبانيا\n\nأرسل الملفات واحداً تلو الآخر:",
+      "مليح! 📎 دابا لازم تبعثلنا هاد الوثائق:\n\n1️⃣ نسخة من طلب اللجوء\n2️⃣ جواز السفر كامل (PDF)\n3️⃣ شهادة السوابق من بلادك\n4️⃣ دليل الإقامة 5 أشهر في اسبانيا\n\nابعث الملفات وحدة وحدة:",
+      "Parfait ! 📎 Envoyez-nous maintenant les documents :\n\n1️⃣ Copie de la demande d'asile\n2️⃣ Passeport complet (PDF)\n3️⃣ Casier judiciaire de votre pays\n4️⃣ Preuve de résidence de 5 mois\n\nEnvoyez les fichiers un par un :"
     ),
     inputType: "file",
     process: (_value, session) => ({
@@ -223,10 +245,10 @@ export const flowSteps: Record<string, FlowStep> = {
   ts_presence: {
     id: "ts_presence",
     message: t(
-      "واش كنتي فإسبانيا قبل 31 دجنبر 2025؟ 🇪🇸",
-      "هل كنت متواجداً في إسبانيا قبل 31 ديسمبر 2025؟ 🇪🇸",
-      "واش كنت في اسبانيا قبل 31 ديسمبر 2025؟ 🇪🇸",
-      "Étiez-vous en Espagne avant le 31 décembre 2025 ? 🇪🇸"
+      "واش كنتي فإسبانيا قبل 1 يناير 2026؟ 🇪🇸",
+      "هل كنت متواجداً في إسبانيا قبل 1 يناير 2026؟ 🇪🇸",
+      "واش كنت في اسبانيا قبل 1 جانفي 2026؟ 🇪🇸",
+      "Étiez-vous en Espagne avant le 1er janvier 2026 ? 🇪🇸"
     ),
     inputType: "buttons",
     options: [
@@ -244,10 +266,10 @@ export const flowSteps: Record<string, FlowStep> = {
   ts_proof: {
     id: "ts_proof",
     message: t(
-      "كيفاش تقدر تثبت بلي كنتي فإسبانيا قبل 31/12/2025؟\n\nختار:",
-      "كيف يمكنك إثبات أنك كنت في إسبانيا قبل 31/12/2025؟\n\nاختر:",
-      "كيفاش تقدر تثبت بلي كنت في اسبانيا قبل 31/12/2025؟\n\nاختار:",
-      "Comment pouvez-vous prouver votre présence en Espagne avant le 31/12/2025 ?\n\nChoisissez :"
+      "كيفاش تقدر تثبت بلي كنتي فإسبانيا قبل 1 يناير 2026؟\n\nختار:",
+      "كيف يمكنك إثبات أنك كنت في إسبانيا قبل 1 يناير 2026؟\n\nاختر:",
+      "كيفاش تقدر تثبت بلي كنت في اسبانيا قبل 1 جانفي 2026؟\n\nاختار:",
+      "Comment pouvez-vous prouver votre présence en Espagne avant le 1er janvier 2026 ?\n\nChoisissez :"
     ),
     inputType: "buttons",
     options: [
@@ -360,16 +382,16 @@ export const flowSteps: Record<string, FlowStep> = {
   ts_additional: {
     id: "ts_additional",
     message: t(
-      "خاصك تحقق شرط واحد على الأقل من هادو:\n\n1️⃣ خدمتي فإسبانيا ولا عندك عقد خدمة\n2️⃣ كتعيش مع عائلتك (ولادك كيقراو...)\n3️⃣ وضعية هشاشة اجتماعية\n\nختار:",
-      "يجب أن تستوفي شرطاً واحداً على الأقل:\n\n1️⃣ عملت في إسبانيا أو لديك عقد عمل\n2️⃣ تعيش مع عائلتك (أطفال يدرسون...)\n3️⃣ وضعية هشاشة اجتماعية\n\nاختر:",
-      "لازم تحقق شرط واحد على الأقل:\n\n1️⃣ خدمت في اسبانيا ولا عندك عقد خدمة\n2️⃣ تعيش مع عائلتك (ولادك يقراو...)\n3️⃣ وضعية هشاشة اجتماعية\n\nاختار:",
-      "Vous devez remplir au moins une condition :\n\n1️⃣ Vous avez travaillé en Espagne ou avez un contrat\n2️⃣ Vous vivez avec votre famille (enfants scolarisés...)\n3️⃣ Situation de vulnérabilité sociale\n\nChoisissez :"
+      "خاصك تحقق شرط واحد على الأقل من هادو:\n\n1️⃣ خدمتي فإسبانيا ولا عندك عقد خدمة\n2️⃣ كتعيش مع عائلتك (ولادك كيقراو...)\n3️⃣ وضعية غير قانونية (بدون أوراق = حالة هشاشة)\n\nختار:",
+      "يجب أن تستوفي شرطاً واحداً على الأقل:\n\n1️⃣ عملت في إسبانيا أو لديك عقد عمل\n2️⃣ تعيش مع عائلتك (أطفال يدرسون...)\n3️⃣ وضعية غير قانونية (بدون أوراق = هشاشة)\n\nاختر:",
+      "لازم تحقق شرط واحد على الأقل:\n\n1️⃣ خدمت في اسبانيا ولا عندك عقد خدمة\n2️⃣ تعيش مع عائلتك (ولادك يقراو...)\n3️⃣ وضعية غير قانونية (حراڤ = هشاشة)\n\nاختار:",
+      "Vous devez remplir au moins une condition :\n\n1️⃣ Vous avez travaillé en Espagne ou avez un contrat\n2️⃣ Vous vivez avec votre famille (enfants scolarisés...)\n3️⃣ Sans papiers (Situation irrégulière = Vulnérabilité)\n\nChoisissez :"
     ),
     inputType: "buttons",
     options: [
       { label: t("خدمة / عقد 💼", "عمل / عقد 💼", "خدمة / عقد 💼", "Travail / Contrat 💼"), value: "work" },
       { label: t("عائلة 👨‍👩‍👧‍👦", "عائلة 👨‍👩‍👧‍👦", "عائلة 👨‍👩‍👧‍👦", "Famille 👨‍👩‍👧‍👦"), value: "family" },
-      { label: t("هشاشة 🤝", "هشاشة 🤝", "هشاشة 🤝", "Vulnérabilité 🤝"), value: "vulnerability" },
+      { label: t("بدون أوراق / هشاشة 🤝", "بدون أوراق / هشاشة 🤝", "حراڤ / هشاشة 🤝", "Sans papiers / Vulnérabilité 🤝"), value: "vulnerability" },
     ],
     process: (value, session) => {
       const nextMap: Record<string, string> = {
@@ -414,10 +436,10 @@ export const flowSteps: Record<string, FlowStep> = {
   ts_vuln_docs: {
     id: "ts_vuln_docs",
     message: t(
-      "📎 إلا عندك تقرير من الخدمات الاجتماعية صيفطو. إلا ما عندكش ما كاين باس — غادي نقيمو الملف بالوثائق اللي عندك.",
-      "📎 إذا لديك تقرير من الخدمات الاجتماعية أرسله. إذا لا، لا مشكلة — سنُقيّم ملفك بالوثائق المتاحة.",
-      "📎 إلا عندك تقرير من الخدمات الاجتماعية ابعثهولنا. إلا ما عندكش ما كاين والو — نقيمو الملف بالوثائق اللي عندك.",
-      "📎 Si vous avez un rapport des services sociaux, envoyez-le. Sinon, pas de problème — nous évaluerons votre dossier avec les documents disponibles."
+      "📎 القانون الجديد كيعتبر الوضعية بدون أوراق حالة هشاشة بوحدها! إلا عندك تقرير من الخدمات الاجتماعية صيفطو، متوفرش؟ ماشي مشكل، التواجد غير القانوني كافي.",
+      "📎 القانون الجديد يعتبر الوضعية بدون أوراق (Irregular) حالة هشاشة تلقائياً! أرسل تقرير الخدمات الاجتماعية إن وجد، وإن لم يوجد، فوضعك غير القانوني يكفي.",
+      "📎 القانون الجديد يعتبر بلي كي تكون حراڤ هي حالة هشاشة بروحها! ابعث تقرير الخدمات الاجتماعية إلا كاين، ولا ماكاش، وضعك يكفي.",
+      "📎 La nouvelle loi considère la situation « sans papiers » comme une vulnérabilité en soi ! Envoyez un rapport si vous en avez un, sinon votre statut irrégulier suffit."
     ),
     inputType: "file",
     process: (_value, session) => ({
@@ -429,10 +451,10 @@ export const flowSteps: Record<string, FlowStep> = {
   ts_common_docs: {
     id: "ts_common_docs",
     message: t(
-      "📋 دابا صيفط لينا الوثائق الأساسية:\n\n1️⃣ جواز السفر كامل (PDF)\n2️⃣ دليل أنك كنتي فإسبانيا قبل 31/12/2025\n   (تذكرة، ختم، فاتورة، تقرير طبي...)\n3️⃣ دليل الإقامة 5 شهور\n4️⃣ شهادة السوابق من بلادك",
-      "📋 الآن أرسل لنا الوثائق الأساسية:\n\n1️⃣ جواز السفر كامل (PDF)\n2️⃣ دليل وجودك في إسبانيا قبل 31/12/2025\n   (تذكرة، ختم، فاتورة، تقرير طبي...)\n3️⃣ دليل الإقامة لمدة 5 أشهر\n4️⃣ شهادة السوابق من بلدك",
-      "📋 دابا ابعثلنا الوثائق الأساسية:\n\n1️⃣ جواز السفر كامل (PDF)\n2️⃣ دليل أنك كنت في اسبانيا قبل 31/12/2025\n   (تذكرة، ختم، فاتورة، تقرير طبي...)\n3️⃣ دليل الإقامة 5 أشهر\n4️⃣ شهادة السوابق من بلادك",
-      "📋 Envoyez maintenant les documents de base :\n\n1️⃣ Passeport complet (PDF)\n2️⃣ Preuve de présence avant le 31/12/2025\n   (billet, tampon, facture, rapport médical...)\n3️⃣ Preuve de résidence de 5 mois\n4️⃣ Casier judiciaire de votre pays"
+      "📋 دابا صيفط لينا الوثائق الأساسية:\n\n1️⃣ جواز السفر كامل (PDF)\n2️⃣ دليل أنك كنتي فإسبانيا قبل 1/1/2026\n   (تذكرة، ختم، فاتورة، تقرير طبي...)\n3️⃣ دليل الإقامة 5 شهور\n4️⃣ شهادة السوابق من بلادك",
+      "📋 الآن أرسل لنا الوثائق الأساسية:\n\n1️⃣ جواز السفر كامل (PDF)\n2️⃣ دليل وجودك في إسبانيا قبل 1/1/2026\n   (تذكرة، ختم، فاتورة، تقرير طبي...)\n3️⃣ دليل الإقامة لمدة 5 أشهر\n4️⃣ شهادة السوابق من بلدك",
+      "📋 دابا ابعثلنا الوثائق الأساسية:\n\n1️⃣ جواز السفر كامل (PDF)\n2️⃣ دليل أنك كنت في اسبانيا قبل 1/1/2026\n   (تذكرة، ختم، فاتورة، تقرير طبي...)\n3️⃣ دليل الإقامة 5 أشهر\n4️⃣ شهادة السوابق من بلادك",
+      "📋 Envoyez maintenant les documents de base :\n\n1️⃣ Passeport complet (PDF)\n2️⃣ Preuve de présence avant le 1/1/2026\n   (billet, tampon, facture, rapport médical...)\n3️⃣ Preuve de résidence de 5 mois\n4️⃣ Casier judiciaire de votre pays"
     ),
     inputType: "file",
     process: (_value, session) => ({
@@ -630,10 +652,10 @@ export const flowSteps: Record<string, FlowStep> = {
   not_eligible_date: {
     id: "not_eligible_date",
     message: t(
-      "⚠️ حسب الشروط الحالية، ما يمكنكش تستافد من التسوية الجماعية حيث خاصك تكون فإسبانيا قبل 31/12/2025.\n\nإلا عندك حالة خاصة، راسلنا. 🤝",
-      "⚠️ حسب الشروط الحالية، لا يمكنك الاستفادة من التسوية الجماعية لأنه يجب التواجد في إسبانيا قبل 31/12/2025.\n\nإذا لديك حالة خاصة، راسلنا. 🤝",
-      "⚠️ حسب الشروط الحالية، ما تقدرش تستافد من التسوية الجماعية لأنه لازم تكون في اسبانيا قبل 31/12/2025.\n\nإلا عندك حالة خاصة، راسلنا. 🤝",
-      "⚠️ Selon les conditions actuelles, vous ne pouvez pas bénéficier de la régularisation car il faut avoir été en Espagne avant le 31/12/2025.\n\nSi vous avez un cas particulier, contactez-nous. 🤝"
+      "⚠️ حسب الشروط الحالية، ما يمكنكش تستافد من التسوية الجماعية حيث خاصك تكون فإسبانيا قبل 01/01/2026.\n\nإلا عندك حالة خاصة، راسلنا. 🤝",
+      "⚠️ حسب الشروط الحالية، لا يمكنك الاستفادة من التسوية الجماعية لأنه يجب التواجد في إسبانيا قبل 01/01/2026.\n\nإذا لديك حالة خاصة، راسلنا. 🤝",
+      "⚠️ حسب الشروط الحالية، ما تقدرش تستافد من التسوية الجماعية لأنه لازم تكون في اسبانيا قبل 01/01/2026.\n\nإلا عندك حالة خاصة، راسلنا. 🤝",
+      "⚠️ Selon les conditions actuelles, vous ne pouvez pas bénéficier de la régularisation car il faut avoir été en Espagne avant le 01/01/2026.\n\nSi vous avez un cas particulier, contactez-nous. 🤝"
     ),
     inputType: "none",
     process: () => ({ nextStep: "not_eligible_date" }),

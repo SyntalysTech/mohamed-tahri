@@ -68,7 +68,7 @@ function fillTemplate(text: string, session: ClientSession): string {
 // ── Progress tracking ──────────────────────────────────────
 const stepsOrder = [
   "language_select", "welcome", "phone", "asylum_check",
-  "tq_in_spain", "tq_criminal", "tq_entry_ban", "tq_no_return", "tq_docs", "tq_eligible",
+  "tq_in_spain", "tq_five_months", "tq_criminal", "tq_entry_ban", "tq_no_return", "tq_docs", "tq_eligible",
   "ts_presence", "ts_proof", "ts_five_months", "ts_entry_date", "ts_criminal", "ts_entry_ban",
   "ts_additional", "ts_work_docs", "ts_family_docs", "ts_vuln_docs", "ts_common_docs", "ts_eligible",
   "service_tier", "premium_payment", "premium_upsell", "case_summary", "recovery_info",
@@ -239,24 +239,21 @@ export default function ChatBot({ plan }: ChatBotProps) {
 
   return (
     <div
-      className={`flex flex-col h-full max-w-lg mx-auto bg-white shadow-2xl rounded-2xl overflow-hidden border ${
-        isPremium ? "border-gold-200 animate-pulse-glow" : "border-mrt-100"
-      }`}
+      className={`flex flex-col h-full max-w-lg mx-auto bg-white shadow-2xl rounded-2xl overflow-hidden border ${isPremium ? "border-gold-200 animate-pulse-glow" : "border-mrt-100"
+        }`}
       dir={rtl ? "rtl" : "ltr"}
     >
       {/* ── Header ──────────────────────────────── */}
       <header
-        className={`shrink-0 px-4 py-3 flex items-center justify-between ${
-          isPremium
+        className={`shrink-0 px-4 py-3 flex items-center justify-between ${isPremium
             ? "bg-gradient-to-r from-mrt-950 via-mrt-900 to-mrt-950"
             : "bg-mrt-950"
-        } text-white`}
+          } text-white`}
       >
         <div className="flex items-center gap-3">
           <div
-            className={`w-9 h-9 rounded-full flex items-center justify-center overflow-hidden ${
-              isPremium ? "bg-gradient-to-br from-gold-400 to-gold-600 p-0.5" : "bg-mrt-800 p-0.5"
-            }`}
+            className={`w-9 h-9 rounded-full flex items-center justify-center overflow-hidden ${isPremium ? "bg-gradient-to-br from-gold-400 to-gold-600 p-0.5" : "bg-mrt-800 p-0.5"
+              }`}
           >
             <Image
               src="/logo.png"
@@ -311,11 +308,10 @@ export default function ChatBot({ plan }: ChatBotProps) {
       {/* ── Progress bar ────────────────────────── */}
       <div className="h-1 bg-mrt-100 shrink-0">
         <div
-          className={`h-full transition-all duration-500 ease-out animate-progress ${
-            isPremium
+          className={`h-full transition-all duration-500 ease-out animate-progress ${isPremium
               ? "bg-gradient-to-r from-gold-400 to-gold-500"
               : "bg-mrt-900"
-          }`}
+            }`}
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -325,9 +321,8 @@ export default function ChatBot({ plan }: ChatBotProps) {
         {session.messages.map((msg, idx) => (
           <div
             key={msg.id}
-            className={`flex animate-fade-in-up ${
-              msg.sender === "user" ? "justify-end" : "justify-start"
-            }`}
+            className={`flex animate-fade-in-up ${msg.sender === "user" ? "justify-end" : "justify-start"
+              }`}
             style={{ animationDelay: `${Math.min(idx * 30, 200)}ms` }}
           >
             {msg.sender === "bot" && (
@@ -336,21 +331,18 @@ export default function ChatBot({ plan }: ChatBotProps) {
               </div>
             )}
             <div
-              className={`max-w-[80%] px-4 py-2.5 text-[13px] leading-relaxed whitespace-pre-wrap ${
-                msg.sender === "user"
-                  ? `rounded-2xl rounded-br-sm ${
-                      isPremium
-                        ? "bg-gradient-to-br from-mrt-900 to-mrt-800"
-                        : "bg-mrt-950"
-                    } text-white`
+              className={`max-w-[80%] px-4 py-2.5 text-[13px] leading-relaxed whitespace-pre-wrap ${msg.sender === "user"
+                  ? `rounded-2xl rounded-br-sm ${isPremium
+                    ? "bg-gradient-to-br from-mrt-900 to-mrt-800"
+                    : "bg-mrt-950"
+                  } text-white`
                   : "rounded-2xl rounded-bl-sm bg-white text-mrt-800 border border-mrt-100 shadow-sm"
-              }`}
+                }`}
             >
               {msg.text}
               <div
-                className={`text-[9px] mt-1.5 ${
-                  msg.sender === "user" ? "text-mrt-400" : "text-mrt-300"
-                }`}
+                className={`text-[9px] mt-1.5 ${msg.sender === "user" ? "text-mrt-400" : "text-mrt-300"
+                  }`}
               >
                 {formatTime(msg.timestamp)}
               </div>
@@ -389,11 +381,10 @@ export default function ChatBot({ plan }: ChatBotProps) {
                     handleResponse(opt.value, opt.label[session.language])
                   }
                   disabled={isTyping}
-                  className={`w-full py-3 px-4 text-[13px] font-medium rounded-xl border-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98] ${
-                    isPremium && i === (currentStep.options!.length - 1) && currentStep.options!.length > 1
+                  className={`w-full py-3 px-4 text-[13px] font-medium rounded-xl border-2 transition-all disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98] ${isPremium && i === (currentStep.options!.length - 1) && currentStep.options!.length > 1
                       ? "border-gold-300 text-mrt-900 bg-gold-50 hover:bg-gold-100 hover:border-gold-400"
                       : "border-mrt-200 text-mrt-900 hover:bg-mrt-50 hover:border-mrt-400"
-                  }`}
+                    }`}
                 >
                   {opt.label[session.language]}
                 </button>
@@ -411,9 +402,8 @@ export default function ChatBot({ plan }: ChatBotProps) {
                 onKeyDown={handleKeyDown}
                 disabled={isTyping}
                 placeholder={currentStep.inputType === "date" ? "DD/MM/YYYY" : "..."}
-                className={`flex-1 py-3 px-4 text-[13px] rounded-xl border-2 border-mrt-200 focus:border-mrt-900 focus:outline-none transition-colors disabled:opacity-40 ${
-                  currentStep.inputType === "date" ? "font-mono" : ""
-                }`}
+                className={`flex-1 py-3 px-4 text-[13px] rounded-xl border-2 border-mrt-200 focus:border-mrt-900 focus:outline-none transition-colors disabled:opacity-40 ${currentStep.inputType === "date" ? "font-mono" : ""
+                  }`}
                 dir={currentStep.inputType === "date" ? "ltr" : rtl ? "rtl" : "ltr"}
               />
               <button
@@ -482,11 +472,10 @@ export default function ChatBot({ plan }: ChatBotProps) {
         <div className="shrink-0 border-t border-mrt-100 bg-white p-3 space-y-2">
           <button
             onClick={startNewSession}
-            className={`w-full py-3 px-4 text-[13px] font-medium rounded-xl transition-all flex items-center justify-center gap-2 active:scale-[0.98] ${
-              isPremium
+            className={`w-full py-3 px-4 text-[13px] font-medium rounded-xl transition-all flex items-center justify-center gap-2 active:scale-[0.98] ${isPremium
                 ? "bg-gradient-to-r from-gold-400 to-gold-500 text-mrt-950 hover:from-gold-500 hover:to-gold-600"
                 : "bg-mrt-950 text-white hover:bg-mrt-800"
-            }`}
+              }`}
           >
             <RotateCcw size={14} />
             {session.language === "fr" ? "Nouvelle consultation" : "استشارة جديدة"}
