@@ -40,30 +40,57 @@ export const flowSteps: Record<string, FlowStep> = {
   welcome: {
     id: "welcome",
     message: t(
-      "مرحبا بيك فمكتبنا! 🏛️\n\nكنساعدوك فموضوع التسوية الاستثنائية ديال الوضعية فإسبانيا.\n\nعافاك عطينا سميتك الكاملة:",
-      "مرحباً بك في مكتبنا! 🏛️\n\nنساعدك في موضوع التسوية الاستثنائية للوضعية في إسبانيا.\n\nمن فضلك أعطنا اسمك الكامل:",
-      "مرحبا بيك في مكتبنا! 🏛️\n\nنعاونوك في موضوع التسوية الاستثنائية تاع الوضعية في اسبانيا.\n\nعطينا اسمك الكامل:",
-      "Bienvenue dans notre cabinet ! 🏛️\n\nNous vous aidons pour la régularisation exceptionnelle en Espagne.\n\nVeuillez nous donner votre nom complet :"
+      "مرحبا بك فمكتب Asesoria MRT! 🏛️\n\nنحن خبراء فجميع مجالات قانون الهجرة (Extranjería) فإسبانيا.\n\nعافاك عطينا سميتك الكاملة باش نقدروا نساعدوك:",
+      "مرحباً بك في مكتب Asesoria MRT! 🏛️\n\nنحن خبراء في جميع مجالات قانون الهجرة (Extranjería) في إسبانيا.\n\nمن فضلك أعطنا اسمك الكامل لكي نتمكن من مساعدتك:",
+      "مرحبا بيك في مكتب Asesoria MRT! 🏛️\n\nنحن خبراء في ڨاع مجالات قانون الهجرة (Extranjería) في إسبانيا.\n\nعطينا اسمك الكامل باش نقدروا نعاونوك:",
+      "Bienvenue au cabinet Asesoria MRT ! 🏛️\n\nNous sommes experts dans tous les domaines du droit de l'immigration (Extranjería) en Espagne.\n\nVeuillez nous donner votre nom complet pour que nous puissions vous aider :"
     ),
     inputType: "text",
     process: (value, _session) => ({
-      nextStep: "phone",
-      updates: { name: value.trim() },
+      nextStep: "topic_choice",
+      updates: { name: value.trim(), phone: "(Obtenido de WhatsApp)" },
     }),
   },
 
-  phone: {
-    id: "phone",
+  topic_choice: {
+    id: "topic_choice",
     message: t(
-      "شكرا! دابا عطينا رقم الهاتف ديالك (واتساب):",
-      "شكراً! الآن أعطنا رقم هاتفك (واتساب):",
-      "شكرا! دابا عطينا رقم تليفونك (واتساب):",
-      "Merci ! Maintenant donnez-nous votre numéro de téléphone (WhatsApp) :"
+      "شنو هو الموضوع لي بغيتي تستاشرنا فيه؟",
+      "ما هو الموضوع الذي تريد الاستشارة حوله؟",
+      "واش هو الموضوع اللي حاب تستاشرنا فيه؟",
+      "Quel est le sujet de votre consultation ?"
     ),
-    inputType: "text",
-    process: (value, _session) => ({
-      nextStep: "asylum_check",
-      updates: { phone: value.trim() },
+    inputType: "buttons",
+    options: [
+      { label: t("التسوية الاستثنائية 2025 🇪🇸", "التسوية الاستثنائية 2025 🇪🇸", "التسوية الاستثنائية 2025 🇪🇸", "Régularisation 2025 🇪🇸"), value: "regularizacion" },
+      { label: t("الجذور (Arraigo) 📄", "الجذور (Arraigo) 📄", "الجذور (Arraigo) 📄", "Arraigo 📄"), value: "arraigo" },
+      { label: t("الجنسية الإسبانية 🛂", "الجنسية الإسبانية 🛂", "الجنسية الإسبانية 🛂", "Nationalité Espagnole 🛂"), value: "nacionalidad" },
+      { label: t("تجديد الوثائق 🔄", "تجديد الوثائق 🔄", "تجديد الوثائق 🔄", "Renouvellement 🔄"), value: "renovacion" },
+      { label: t("مواضيع أخرى 💼", "مواضيع أخرى 💼", "مواضيع أخرى 💼", "Autres sujets 💼"), value: "otros" },
+    ],
+    process: (value, _session) => {
+      if (value === "regularizacion") {
+        return { nextStep: "asylum_check", updates: {} };
+      }
+      return { nextStep: "general_topic", updates: {} };
+    },
+  },
+
+  general_topic: {
+    id: "general_topic",
+    message: t(
+      "بما أن هادا غير نموذج تجريبي (Prototipo)، التفاصيل ديال هاد الخيار مازال ما مبرمجاش.\n\nولكن فالتطبيق الحقيقي، غيكون مسار كامل لجمع الوثايق بحال لي كاين فالتسوية الاستثنائية.\n\nغادي يتصل بيك واحد من الفريق ديالنا قريبا!",
+      "بما أن هذا مجرد نموذج تجريبي (Prototipo)، تفاصيل هذا الخيار لم تتم برمجتها بعد.\n\nولكن في التطبيق الحقيقي، سيكون هناك مسار كامل لجمع الوثائق كما هو الحال في التسوية الاستثنائية.\n\nسيتصل بك أحد أعضاء فريقنا قريباً!",
+      "بما أن هادا غير نموذج تجريبي (Prototipo)، التفاصيل تاع هاد الخيار مزال ما تبرمجتش.\n\nولكن في التطبيق الحقيقي، غيكون كاين مسار كامل لجمع الوثائق كيما كاين في التسوية الاستثنائية.\n\nغادي يتصل بيك واحد من الفريق ديالنا قريبا!",
+      "Comme il s'agit d'un prototype, les détails de cette option n'ont pas encore été programmés.\n\nMais dans l'application réelle, il y aura un parcours complet de collecte de documents comme pour la régularisation exceptionnelle.\n\nUn membre de notre équipe vous contactera bientôt !"
+    ),
+    inputType: "buttons",
+    options: [
+      { label: t("إنهاء ✅", "إنهاء ✅", "إنهاء ✅", "Terminer ✅"), value: "end" }
+    ],
+    process: (value, session) => ({
+      nextStep: "complete",
+      updates: { status: "referred" }
     }),
   },
 
